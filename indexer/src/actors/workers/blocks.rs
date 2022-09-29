@@ -22,7 +22,7 @@ use sp_runtime::{
 	generic::SignedBlock,
 	traits::{Block as BlockT, Header as _, NumberFor},
 };
-use substrate_archive_backend::{ReadOnlyBackend, ReadOnlyDb, RuntimeVersionCache};
+use backend::{ReadOnlyBackend, ReadOnlyDb, RuntimeVersionCache};
 
 use crate::{
 	actors::{

@@ -25,7 +25,6 @@ use codec::{Decode, Encode, Error as DecodeError};
 use serde::{Deserialize, Serialize};
 use sqlx::{types::Json, FromRow, PgConnection, Postgres};
 
-use desub::{types::LegacyOrCurrentExtrinsic, Chain};
 use sc_executor::RuntimeVersion;
 use sp_runtime::{
 	generic::SignedBlock,
@@ -138,21 +137,6 @@ impl<Hash: Copy> From<Storage<Hash>> for Vec<StorageModel<Hash>> {
 impl<Hash: Copy> From<BatchStorage<Hash>> for Vec<StorageModel<Hash>> {
 	fn from(original: BatchStorage<Hash>) -> Vec<StorageModel<Hash>> {
 		original.inner.into_iter().flat_map(Vec::<StorageModel<Hash>>::from).collect()
-	}
-}
-
-#[derive(Debug, Serialize, FromRow)]
-pub struct ExtrinsicsModel {
-	pub id: Option<i32>,
-	pub hash: Vec<u8>,
-	pub number: i32,
-	pub extrinsics: Json<Vec<LegacyOrCurrentExtrinsic>>,
-}
-
-impl ExtrinsicsModel {
-	pub fn new(hash: Vec<u8>, number: u32, extrinsics: Vec<LegacyOrCurrentExtrinsic>) -> Result<Self> {
-		let number = number.try_into()?;
-		Ok(Self { id: None, hash, number, extrinsics: Json(extrinsics) })
 	}
 }
 

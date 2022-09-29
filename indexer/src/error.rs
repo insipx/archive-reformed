@@ -62,7 +62,7 @@ pub enum ArchiveError {
 
 	// archive backend error
 	#[error("Backend error: {0}")]
-	Backend(#[from] substrate_archive_backend::BackendError),
+	Backend(#[from] backend::BackendError),
 
 	#[error(transparent)]
 	Api(#[from] sp_api::ApiError),
@@ -84,9 +84,6 @@ pub enum ArchiveError {
 
 	#[error("Previous Spec {0} not found")]
 	PrevSpecNotFound(u32),
-
-	#[error(transparent)]
-	Desub(#[from] desub::Error),
 }
 
 #[derive(Error, Debug)]
@@ -103,7 +100,7 @@ pub enum TracingError {
 
 impl From<sp_blockchain::Error> for ArchiveError {
 	fn from(e: sp_blockchain::Error) -> Self {
-		Self::Backend(substrate_archive_backend::BackendError::Blockchain(e.to_string()))
+		Self::Backend(backend::BackendError::Blockchain(e.to_string()))
 	}
 }
 

@@ -41,7 +41,7 @@ use sp_api::{ApiExt, ConstructRuntimeApi};
 use sp_block_builder::BlockBuilder as BlockBuilderApi;
 use sp_runtime::traits::{Block as BlockT, NumberFor};
 
-use substrate_archive_backend::{ApiAccess, Meta, ReadOnlyBackend, ReadOnlyDb, RuntimeConfig};
+use sa_backend::{ApiAccess, Meta, ReadOnlyBackend, ReadOnlyDb, RuntimeConfig};
 
 use self::workers::{
 	blocks::{Crawl, ReIndex},
@@ -49,7 +49,7 @@ use self::workers::{
 	extrinsics_decoder::Index,
 	storage_aggregator::{SendStorage, SendTraces},
 };
-pub use self::workers::{BlocksIndexer, DatabaseActor, ExtrinsicsDecoder, StorageAggregator};
+pub use self::workers::{BlocksIndexer, DatabaseActor, StorageAggregator};
 use crate::{
 	archive::Archive,
 	database::{
@@ -164,7 +164,6 @@ struct Actors<Block: Send + Sync + 'static, Hash: Send + Sync + 'static, Db: Sen
 	blocks: Address<workers::BlocksIndexer<Block, Db>>,
 	metadata: Address<workers::MetadataActor<Block>>,
 	db: Address<DatabaseActor>,
-	extrinsics: Address<ExtrinsicsDecoder>,
 }
 
 impl<Block: Send + Sync + 'static, Hash: Send + Sync + 'static, Db: Send + Sync + 'static> Clone
@@ -176,7 +175,6 @@ impl<Block: Send + Sync + 'static, Hash: Send + Sync + 'static, Db: Send + Sync 
 			blocks: self.blocks.clone(),
 			metadata: self.metadata.clone(),
 			db: self.db.clone(),
-			extrinsics: self.extrinsics.clone(),
 		}
 	}
 }
@@ -194,7 +192,6 @@ where
 		let metadata =
 			workers::MetadataActor::new(db.clone(), conf.meta().clone()).await?.create(None).spawn(&mut AsyncStd);
 		let blocks = workers::BlocksIndexer::new(conf, db.clone(), metadata.clone()).create(None).spawn(&mut AsyncStd);
-		let extrinsics = workers::ExtrinsicsDecoder::new(conf, db.clone()).await?.create(None).spawn(&mut AsyncStd);
 
 		Ok(Actors { storage, blocks, metadata, db, extrinsics })
 	}

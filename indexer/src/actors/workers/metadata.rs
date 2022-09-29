@@ -21,7 +21,7 @@ use sp_runtime::{
 	generic::BlockId,
 	traits::{Block as BlockT, NumberFor},
 };
-use substrate_archive_backend::Meta;
+use backend::Meta;
 
 use crate::{
 	actors::workers::database::{DatabaseActor, GetState},

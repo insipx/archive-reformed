@@ -31,7 +31,7 @@ use sp_runtime::{
 };
 use sp_wasm_interface::Function;
 
-use substrate_archive_backend::{
+use sa_backend:{
 	runtime_api, ExecutionMethod, ReadOnlyBackend, ReadOnlyDb, RuntimeConfig, TArchiveClient,
 };
 

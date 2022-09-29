@@ -32,7 +32,7 @@ use sp_runtime::{
 	traits::{Block as BlockT, Header, NumberFor},
 };
 
-use substrate_archive_backend::{ApiAccess, ReadOnlyBackend as Backend, ReadOnlyDb};
+use sa_backend::{ApiAccess, ReadOnlyBackend as Backend, ReadOnlyDb};
 
 use crate::{
 	actors::StorageAggregator,
